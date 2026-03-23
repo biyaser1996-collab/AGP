@@ -1,13 +1,14 @@
 #!/bin/bash
+ROOT="$(cd "$(dirname "$0")" && pwd)"
 echo "Starting GHL Marketplace App..."
 
 # Start backend
-cd "$(dirname "$0")/server"
+cd "$ROOT/server"
 npm run dev &
 SERVER_PID=$!
 
 # Start frontend
-cd "$(dirname "$0")/client"
+cd "$ROOT/client"
 npm start &
 CLIENT_PID=$!
 
