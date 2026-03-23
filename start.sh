@@ -1,0 +1,24 @@
+#!/bin/bash
+echo "Starting GHL Marketplace App..."
+
+# Start backend
+cd "$(dirname "$0")/server"
+npm run dev &
+SERVER_PID=$!
+
+# Start frontend
+cd "$(dirname "$0")/client"
+npm start &
+CLIENT_PID=$!
+
+echo ""
+echo "Backend PID:  $SERVER_PID"
+echo "Frontend PID: $CLIENT_PID"
+echo "Backend:  http://localhost:3001"
+echo "Frontend: http://localhost:3000"
+echo ""
+echo "Press Ctrl+C to stop both."
+
+# Wait for Ctrl+C
+trap "kill $SERVER_PID $CLIENT_PID 2>/dev/null; exit" INT TERM
+wait
