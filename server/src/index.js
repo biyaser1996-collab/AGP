@@ -1,5 +1,6 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
@@ -9,7 +10,7 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(session({
   secret: config.session.secret,
@@ -38,6 +39,13 @@ app.get('/api/health', (req, res) => {
     mockMode: config.useMockGhl,
     timestamp: new Date().toISOString(),
   });
+});
+
+// ─── Serve React client build ────────────────────────────
+const clientBuild = path.resolve(__dirname, '../../client/build');
+app.use(express.static(clientBuild));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientBuild, 'index.html'));
 });
 
 // ─── Error handling ──────────────────────────────────────
